@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 500;
+}
+/*:root {*/
+/*  --bs-primary: #your-primary-color-here;*/
+/*  --bs-secondary: #your-secondary-color-here;*/
+/*}*/
+.primary-color {
+  color: #bf3c3c;
+}
+.secondary-color {
+  color: #6c757d;
+}
