@@ -1,18 +1,19 @@
 import {SignedInLinks} from "./SignedInLinks";
 import {SignedOutLinks} from "./SignedOutLinks";
 import {NavLink} from "react-router-dom";
+import {useFirebase} from "../../config/FbContext";
 
 export const NavBar = () => {
-	let user = true;
+	const { currentUser } = useFirebase();
 	return (
-		<div className="navbar navbar-dark bg-body-secondary overflow-hidden">
+		<div className="navbar navbar-dark shadow shadow-md p-3">
 			<div className="my-auto mx-3">
-				<NavLink to={"/"} className="text-decoration-none my-auto">
+				<NavLink to={"/"} className="nav-item nav-link px-2">
 					<h1 className="my-auto text-center"><strong>ReelRate</strong></h1>
 				</NavLink>
 			</div>
 			<div className="my-auto">
-				{user ? <SignedInLinks /> : <SignedOutLinks />}
+				{currentUser ? <SignedInLinks /> : <SignedOutLinks />}
 			</div>
 		</div>
 	)

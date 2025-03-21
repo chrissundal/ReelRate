@@ -3,13 +3,26 @@
   font-family: 'Quicksand', sans-serif;
   font-weight: 500;
 }
-/*:root {*/
-/*  --bs-primary: #your-primary-color-here;*/
-/*  --bs-secondary: #your-secondary-color-here;*/
-/*}*/
-.primary-color {
-  color: #bf3c3c;
+body {
+  min-height: 100vh;
+  background: url("/public/img/movieapp.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
-.secondary-color {
-  color: #6c757d;
+:root {
+  --bs-primary: rgba(64, 63, 63, 0.78);
+  --bs-secondary: #5882a8;
+}
+.navbar {
+  background-color: var(--bs-primary);
+  color: white;
+}
+.details-button {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.card:hover .details-button {
+  opacity: 1;
 }
