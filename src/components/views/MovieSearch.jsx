@@ -23,7 +23,7 @@ export const MovieSearch = () => {
 			selectedType = `&type=${type}`;
 		}
 		try {
-			const res = await axios.get(`http://www.omdbapi.com/?s=${searchTerm}${selectedType}&apikey=fa1b1ed1`);
+			const res = await axios.get(`http://www.omdbapi.com/?s=${searchTerm}${selectedType}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`);
 			if (res.data.Response === "True") {
 				setMovies(res.data.Search);
 			} else {
@@ -83,7 +83,7 @@ export const MovieSearch = () => {
 			<div className="row">
 				{movies.map((movie) => (
 					<div key={movie.imdbID} className="col-md-4 mb-4">
-						<div className="card h-100 position-relative">
+						<div className="card h-100 position-relative movie-details" onClick={() => handleShowDetails(movie)}>
 							{movie.Poster !== "N/A" ? (
 								<img src={movie.Poster} className="card-img-top" alt={movie.Title} />
 							) : (
@@ -93,9 +93,7 @@ export const MovieSearch = () => {
 								<h5 className="card-title">{movie.Title}</h5>
 								<p className="card-text">{movie.Year}</p>
 								<div className="mt-auto d-flex justify-content-center">
-									<button className="btn btn-sm btn-info details-button text-light" onClick={() => handleShowDetails(movie)}>
-										Vis detaljer
-									</button>
+									
 								</div>
 							</div>
 						</div>

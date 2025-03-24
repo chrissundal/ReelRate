@@ -1,4 +1,4 @@
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import { signOut } from 'firebase/auth';
 import { auth } from '../../config/FbConfig';
 import {useFirebase} from "../../config/FbContext";
@@ -7,11 +7,13 @@ import { useState } from 'react';
 export const SignedInLinks = () => {
 	const { currentUser } = useFirebase();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const navigate = useNavigate();
 
 	const handleSignOut = async () => {
 		try {
 			await signOut(auth);
 			setIsMenuOpen(false);
+			navigate('/');
 		} catch (err) {
 			console.error('Feil ved utlogging', err);
 		}
@@ -48,19 +50,19 @@ export const SignedInLinks = () => {
 			</div>
 
 			{/* desktop */}
-			<div className="d-none d-md-flex align-items-center">
+			<div className="d-none d-md-flex align-items-center nav-icons gap-3">
+				<NavLink to={"/search"} className="nav-item nav-link text-uppercase px-2">
+					<strong><i className="fa-solid fa-magnifying-glass"></i></strong>
+				</NavLink>
+				<NavLink to={"/profile"} className="nav-item nav-link text-uppercase px-2">
+					<strong><i className="fa-solid fa-user"></i></strong>
+				</NavLink>
 				<button
 					onClick={handleSignOut}
 					className="nav-item nav-link text-uppercase border-0 bg-transparent px-2"
 					style={{ verticalAlign: 'baseline', fontWeight: 'inherit', fontSize: 'inherit' }}>
-					<strong>Logg ut</strong>
+					<strong><i className="fa-solid fa-arrow-right-from-bracket"></i></strong>
 				</button>
-				<NavLink to={"/search"} className="nav-item nav-link text-uppercase px-2">
-					<strong>Søk</strong>
-				</NavLink>
-				<NavLink to={"/profile"} className="nav-item nav-link text-uppercase px-2">
-					<strong>Profil</strong>
-				</NavLink>
 			</div>
 		</div>
 	);

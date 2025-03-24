@@ -30,6 +30,7 @@ export const SignUp = () => {
 				lastName: lastName,
 				email: email,
 				favorites: [],
+				watched: [],
 				createdAt: serverTimestamp()
 			});
 			navigate('/');

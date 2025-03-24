@@ -7,7 +7,9 @@ import { NavBar } from "./components/nav/NavBar";
 import { MovieCategories } from "./components/views/MovieCategories";
 import { MovieStart } from "./components/views/MovieStart";
 import { MovieDetails } from "./components/views/MovieDetails";
-import {MovieSearch} from "./components/views/MovieSearch";
+import { MovieSearch } from "./components/views/MovieSearch";
+import { SignedInRoute } from "./components/auth/SignedInRoute";
+import '@fortawesome/fontawesome-free/css/all.css';
 
 const AnimatedRoutes = () => {
     const location = useLocation();
@@ -21,8 +23,16 @@ const AnimatedRoutes = () => {
                     <Route path={"/movie/:id"} element={<MovieDetails/>} />
                     <Route path={"/signin"} element={<SignIn/>} />
                     <Route path={"/signup"} element={<SignUp/>} />
-                    <Route path={"/profile"} element={<h3>Her kommer profil</h3>} />
-                    <Route path={"/search"} element={<MovieSearch/>} />
+                    <Route path={"/profile"} element={
+                        <SignedInRoute>
+                            <h3>Her kommer profil</h3>
+                        </SignedInRoute>
+                    } />
+                    <Route path={"/search"} element={
+                        <SignedInRoute>
+                            <MovieSearch/>
+                        </SignedInRoute>
+                    } />
                     <Route path={"/reset-password"} element={<ResetPassword/>} />
                     <Route path={"*"} element={<h3>404, Ooops ikke gyldig side</h3>} />
                 </Routes>
