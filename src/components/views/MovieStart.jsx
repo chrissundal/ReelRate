@@ -126,7 +126,7 @@ export const MovieStart = () => {
 								<p className="card-text">{movie.Year}</p>
 								<div className="mt-auto d-flex justify-content-center gap-5">
 									<div className="container d-flex justify-content-center">
-										<span>ReelScore: <span style={{color: 'gold'}}>{movie.avgRating.toFixed(2)}/6 <i className="fa-solid fa-star"></i></span></span>
+										<span>ReelRating: <span style={{color: 'gold'}}>{movie.avgRating.toFixed(2)} <i className="fa-solid fa-star"></i></span></span>
 									</div>
 								</div>
 							</div>

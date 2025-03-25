@@ -10,6 +10,7 @@ import { MovieDetails } from "./components/views/MovieDetails";
 import { MovieSearch } from "./components/views/MovieSearch";
 import { SignedInRoute } from "./components/auth/SignedInRoute";
 import '@fortawesome/fontawesome-free/css/all.css';
+import {Profile} from "./components/views/Profile";
 
 const AnimatedRoutes = () => {
     const location = useLocation();
@@ -25,7 +26,7 @@ const AnimatedRoutes = () => {
                     <Route path={"/signup"} element={<SignUp/>} />
                     <Route path={"/profile"} element={
                         <SignedInRoute>
-                            <h3>Her kommer profil</h3>
+                            <Profile/>
                         </SignedInRoute>
                     } />
                     <Route path={"/search"} element={

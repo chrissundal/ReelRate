@@ -48,21 +48,8 @@ export const MovieSearch = () => {
 					<div className="d-flex flex-wrap justify-content-center">
 						{movieTypes.map((movieType) => (
 							<div key={movieType.value} className="form-check">
-								<input
-									type="radio"
-									className="btn-check"
-									name="type"
-									id={movieType.value}
-									value={movieType.value}
-									onChange={(e) => setType(e.target.value)}
-									autoComplete="off"
-								/>
-								<label
-									className={`btn ${type === movieType.value ? 'btn-secondary' : 'btn-outline-secondary'}`}
-									htmlFor={movieType.value}
-								>
-									{movieType.name}
-								</label>
+								<input type="radio" className="btn-check" name="type" id={movieType.value} value={movieType.value} onChange={(e) => setType(e.target.value)}/>
+								<label className={`btn ${type === movieType.value ? 'btn-secondary' : 'btn-outline-secondary'}`} htmlFor={movieType.value} style={{fontWeight: 'bold'}}>{movieType.name}</label>
 							</div>
 						))}
 					</div>
@@ -92,9 +79,6 @@ export const MovieSearch = () => {
 							<div className="card-body d-flex flex-column">
 								<h5 className="card-title">{movie.Title}</h5>
 								<p className="card-text">{movie.Year}</p>
-								<div className="mt-auto d-flex justify-content-center">
-									
-								</div>
 							</div>
 						</div>
 

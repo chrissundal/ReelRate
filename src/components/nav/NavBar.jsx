@@ -9,7 +9,7 @@ export const NavBar = () => {
 		<div className="navbar navbar-dark shadow shadow-md p-3">
 			<div className="my-auto mx-3">
 				<NavLink to={"/"} className="nav-item nav-link px-2">
-					<h1 className="my-auto text-center"><strong>ReelRate</strong></h1>
+					<h1 className="my-auto text-center"><strong><i className="fa-solid fa-film"></i>ReelRate</strong></h1>
 				</NavLink>
 			</div>
 			<div className="my-auto">
