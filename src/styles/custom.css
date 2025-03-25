@@ -29,3 +29,21 @@ body {
 .nav-icons {
   font-size: 25px;
 }
+.rating-dice {
+  font-size: 40px;
+  color: goldenrod;
+}
+.rating-dice i {
+  cursor: pointer;
+  padding:3px;
+  border-radius: 5px;
+  transition: all 0.5s ease;
+}
+.rating-dice i:hover {
+  transform: scale(1.15);
+}
+img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}

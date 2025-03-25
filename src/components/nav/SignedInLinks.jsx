@@ -1,11 +1,9 @@
 import {NavLink, useNavigate} from "react-router-dom";
 import { signOut } from 'firebase/auth';
 import { auth } from '../../config/FbConfig';
-import {useFirebase} from "../../config/FbContext";
 import { useState } from 'react';
 
 export const SignedInLinks = () => {
-	const { currentUser } = useFirebase();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const navigate = useNavigate();
 
