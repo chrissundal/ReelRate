@@ -57,7 +57,6 @@ export const MovieStart = () => {
 				setIsLoading(false);
 			}
 		};
-
 		fetchRatings();
 	}, [currentUser, user]);
 	
@@ -68,8 +67,8 @@ export const MovieStart = () => {
 			try {
 				let shuffledMovieIds = [];
 				if (user && user.watched) {
-					const watchedMovies = user.watched;
-					const filteredMovies = movieIds.filter((movie) => !watchedMovies.includes(movie.id));
+					const watchedMovieIds = user.watched.map((movie) => movie.id);
+					const filteredMovies = movieIds.filter((movie) => !watchedMovieIds.includes(movie.id))
 					shuffledMovieIds = [...filteredMovies];
 				} else {
 					shuffledMovieIds = [...movieIds];
@@ -89,13 +88,13 @@ export const MovieStart = () => {
 							foundMovies.push(addMovie);
 						}
 					} catch (apiError) {
-						console.error(`Error fetching movie ${selectedMovieIds[i].id}:`, apiError);
+						console.error(`Feil ved lasting av film ${selectedMovieIds[i].id}:`, apiError);
 					}
 				}
 				foundMovies.sort((a, b) => b.avgRating - a.avgRating);
 				setMovies(foundMovies);
 			} catch (error) {
-				console.error("Error fetching movie details:", error);
+				console.error("Feil ved lasting av film:", error);
 			} finally {
 				setIsLoading(false);
 			}
@@ -105,37 +104,40 @@ export const MovieStart = () => {
 	}, [movieIds, user]);
 
 	return (
-		<div className="row p-3">
-			{isLoading ? (
-				<div className="d-flex justify-content-center">
-					<div className="spinner-border" role="status">
-						<span className="visually-hidden">Laster...</span>
+		<div className="container rounded-3 mt-2 mb-2" style={{ backgroundColor: '#f8f9fa'}}>
+			<div className="row p-3">
+				{isLoading ? (
+					<div className="d-flex justify-content-center">
+						<div className="spinner-border" role="status">
+							<span className="visually-hidden">Laster...</span>
+						</div>
 					</div>
-				</div>
-			) : movies.length > 0 ? (
-				movies.map((movie) => (
-					<div key={movie.imdbID} className="col-md-4 mb-4" >
-						<div className="card h-100 position-relative movie-details" onClick={() => handleShowDetails(movie)}>
-							{movie.Poster !== "N/A" ? (
-								<img src={movie.Poster} className="card-img-top" alt={movie.Title} />
-							) : (
-								<div className="no-image text-center p-5 bg-light">Ingen bilde</div>
-							)}
-							<div className="card-body d-flex flex-column">
-								<h5 className="card-title">{movie.Title}</h5>
-								<p className="card-text">{movie.Year}</p>
-								<div className="mt-auto d-flex justify-content-center gap-5">
-									<div className="container d-flex justify-content-center">
-										<span>ReelRating: <span style={{color: 'gold'}}>{movie.avgRating.toFixed(2)} <i className="fa-solid fa-star"></i></span></span>
-									</div>
+				) : movies.length > 0 ? (
+					movies.map((movie) => (
+						<div key={movie.imdbID} className="col-md-4 mb-4">
+							<div className="card border-0 h-100 movie-details" onClick={() => handleShowDetails(movie)}>
+								<div className="d-flex justify-content-center align-items-center" style={{ width: '100%' }}>
+									{movie.Poster !== "N/A" ? (
+										<img src={movie.Poster} className="card border-0" alt={movie.Title} />
+									) : (
+										<div className="no-image text-center p-5 bg-light">Ingen bilde</div>
+									)}
+								</div>
+
+								<div className="hover-info">
+									<h5>{movie.Title}</h5>
+									<p>{movie.Year}</p>
+									<p className="text-capitalize">{movie.Type}</p>
+									<span style={{ color: 'gold' }}>ReelRating: {movie.avgRating.toFixed(2)} <i className="fa-solid fa-star"></i></span>
 								</div>
 							</div>
 						</div>
-					</div>
-				))
-			) : (
-				<div className="text-center">Ingen filmer funnet</div>
-			)}
+
+					))
+				) : (
+					<div className="text-center">Ingen filmer funnet</div>
+				)}
+			</div>
 		</div>
 	);
 };

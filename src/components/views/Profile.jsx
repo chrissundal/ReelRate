@@ -9,7 +9,7 @@ export const Profile = () => {
 	const { currentUser } = useFirebase();
 	const [user, setUser] = useState(null);
 	const [favIsOpen, setFavIsOpen] = useState(true);
-	const [watchedIsOpen, setWatchedIsOpen] = useState(false);
+	const [watchedIsOpen, setWatchedIsOpen] = useState(true);
 	
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -32,16 +32,17 @@ export const Profile = () => {
 		fetchUser();
 	}, [currentUser]);
 	
-	
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="container my-4">
 			<div className="container mt-2">
-				<div className="container d-flex gap-1 justify-content-center">
-					<button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setFavIsOpen(!favIsOpen)}>Favoritter</button>
-					<button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setWatchedIsOpen(!watchedIsOpen)}>Sette filmer</button>
+				{ favIsOpen && user && <div className="container card p-0"><FavoriteList user={user}/></div> }
+				<div className="container my-2">
+					{favIsOpen ? <button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setFavIsOpen(false)}>Minimer Favoritter</button> : <button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setFavIsOpen(true)}>Åpne Favoritter</button>}
 				</div>
-				{ favIsOpen && user && <div className="container card mt-3 p-0"><FavoriteList user={user}/></div> }
-				{ watchedIsOpen && user && <div className="container card mt-3 p-0"><WatchList user={user}/></div> }
+				{ watchedIsOpen && user && <div className="container card p-0"><WatchList user={user}/></div> }
+				<div className="container my-2">
+					{watchedIsOpen ? <button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setWatchedIsOpen(false)}>Minimer Watchlist</button> : <button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setWatchedIsOpen(true)}>Åpne Watchlist</button>}
+				</div>
 			</div>
 		</motion.div>
 	)

@@ -1,55 +1,84 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useEffect, useRef, useCallback} from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useFetchRatings } from "../../services/FetchRatings";
+import {useMovieSearch} from "../../services/UseMovieSearch";
+import _ from 'lodash';
 
 export const MovieSearch = () => {
-	const [movies, setMovies] = useState([]);
-	const [searchTerm, setSearchTerm] = useState('');
-	const [loading, setLoading] = useState(false);
-	const [hasSearched, setHasSearched] = useState(false);
-	const [type, setType] = useState('');
 	const navigate = useNavigate();
+	const [searchParams, setSearchParams] = useSearchParams();
+	const movieIds = useFetchRatings();
+	const {
+		movies,
+		searchTerm,
+		setSearchTerm,
+		loading,
+		hasSearched,
+		type,
+		searchMovies,
+		resetSearch,
+		handleTypeChange
+	} = useMovieSearch(searchParams.get('query') || '', searchParams.get('type') || '', setSearchParams, movieIds);
 	const movieTypes = [
-		{name: 'Alle', value: 'none'},
+		{name: 'Alle', value: 'all'},
 		{name: 'Film', value: 'movie'},
 		{name: 'Serie', value: 'series'}
 	];
-	const searchMovies = async () => {
-		if (!searchTerm) return;
-		setLoading(true);
-		setHasSearched(true);
-		let selectedType = '';
-		if(type !== 'none') {
-			selectedType = `&type=${type}`;
+	const query = searchParams.get('query');
+	const isInitialMount = useRef(true);
+	const searchMoviesRef = useRef(searchMovies);
+
+	useEffect(() => {
+		searchMoviesRef.current = searchMovies;
+	}, [searchMovies]);
+
+	useEffect(() => {
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
 		}
-		try {
-			const res = await axios.get(`http://www.omdbapi.com/?s=${searchTerm}${selectedType}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`);
-			if (res.data.Response === "True") {
-				setMovies(res.data.Search);
-			} else {
-				setMovies([]);
+		if (query) {
+			searchMoviesRef.current();
+		}
+	}, [query]);
+	
+	const debouncedFunc = useRef(
+		_.debounce((term, selectedType, setParams) => {
+			const newParams = new URLSearchParams();
+			if (term) {
+				newParams.set('query', term);
+				if (selectedType && selectedType !== 'none') {
+					newParams.set('type', selectedType);
+				}
+				setParams(newParams);
 			}
-		} catch (error) {
-			setMovies([])
-			console.error("Feil ved henting av filmer:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
+		}, 300)
+	);
+
+	const debouncedUpdateSearchParams = useCallback(
+		(term, selectedType) => {
+			debouncedFunc.current(term, selectedType, setSearchParams);
+		},
+		[setSearchParams]
+	);
+	
+	const handleSearchClick = useCallback(() => {
+		debouncedUpdateSearchParams(searchTerm, type);
+	}, [searchTerm, type, debouncedUpdateSearchParams]);
 
 	const handleShowDetails = (movie) => {
 		navigate(`/movie/${movie.imdbID}`);
 	};
-
+	
 	return (
-		<div className="container my-4">
+		<div className="container my-4 ">
 			<div className="row mb-4">
-				<div className="col">
-					<div className="d-flex flex-wrap justify-content-center">
+				<div className="col text-center">
+					<div className="container d-flex justify-content-center p-1 rounded">
 						{movieTypes.map((movieType) => (
-							<div key={movieType.value} className="form-check">
-								<input type="radio" className="btn-check" name="type" id={movieType.value} value={movieType.value} onChange={(e) => setType(e.target.value)}/>
-								<label className={`btn ${type === movieType.value ? 'btn-secondary' : 'btn-outline-secondary'}`} htmlFor={movieType.value} style={{fontWeight: 'bold'}}>{movieType.name}</label>
+							<div key={movieType.value} className="form-check type-select-btn p-2 ">
+								<input type="radio" className="btn-check" name="type" id={movieType.value} value={movieType.value} checked={type === movieType.value} onChange={(e) => handleTypeChange(e.target.value)}/>
+								<label className={`btn ${type === movieType.value ? 'btn-secondary text-center p-2' : 'btn-outline-secondary text-center p-2'}`} htmlFor={movieType.value} style={{ fontWeight: 'bold'}}>{movieType.name}</label>
 							</div>
 						))}
 					</div>
@@ -58,40 +87,58 @@ export const MovieSearch = () => {
 
 			<div className="row mb-4">
 				<div className="col">
-					<div className="input-group">
-						<input type="text" className="form-control" placeholder="Søk etter filmer..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && searchMovies()}/>
-						<button className="btn btn-secondary" onClick={searchMovies} disabled={loading}>
-							{loading ? 'Søker...' : 'Søk'}
-						</button>
-					</div>
+					{!hasSearched && (
+						<div className="input-group">
+							<input type="text" className="form-control" placeholder="Søk etter filmer..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}/>
+							<button className="btn btn-secondary" style={{fontWeight: 'bold'}} onClick={handleSearchClick} disabled={loading}>{loading ? 'Søker...' : 'Søk'}</button>
+						</div>
+					)}
+					{hasSearched && !loading && (
+						<div className="container d-flex justify-content-center">
+							<button className="btn btn-secondary new-search-btn" onClick={resetSearch}>
+								Nytt søk
+							</button>
+						</div>
+					)}
 				</div>
 			</div>
+			
+			<div className="container rounded-3" style={{ backgroundColor: '#f8f9fa'}}>
+				<div className="row p-2">
+					{movies.map((movie) => (
+						<div key={movie.imdbID} className="col-md-4 mb-4">
+							<div className="card border-0 h-100 movie-details" onClick={() => handleShowDetails(movie)}>
+								<div className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
+									{movie.Poster !== "N/A" ? (
+										<img src={movie.Poster} className="card border-0" alt={movie.Title} />
+									) : (
+										<div className="no-image text-center p-5 bg-light">Ingen bilde</div>
+									)}
+								</div>
 
-			<div className="row">
-				{movies.map((movie) => (
-					<div key={movie.imdbID} className="col-md-4 mb-4">
-						<div className="card h-100 position-relative movie-details" onClick={() => handleShowDetails(movie)}>
-							{movie.Poster !== "N/A" ? (
-								<img src={movie.Poster} className="card-img-top" alt={movie.Title} />
-							) : (
-								<div className="no-image text-center p-5 bg-light">Ingen bilde</div>
-							)}
-							<div className="card-body d-flex flex-column">
-								<h5 className="card-title">{movie.Title}</h5>
-								<p className="card-text">{movie.Year}</p>
+								<div className="hover-info">
+									<h5>{movie.Title}</h5>
+									<p>{movie.Year}</p>
+									<p className="text-capitalize">{movie.Type}</p>
+									{movieIds && movie.avgRating ? (
+										<span style={{ color: 'gold' }}>
+											ReelRating: {movie.avgRating.toFixed(2)} <i className="fa-solid fa-star"></i>
+										</span>
+									) : (
+										<span>Ikke vurdert enda</span>
+									)}
+								</div>
 							</div>
 						</div>
+					))}
 
-					</div>
-				))}
-
-				{movies.length === 0 && !loading && searchTerm && hasSearched &&
-					(
-					<div className="col-12 text-center">
-						<p>Ingen filmer funnet</p>
-					</div>
-				)}
+					{movies.length === 0 && !loading && searchTerm && hasSearched && (
+						<div className="col-12 text-center">
+							<p>Ingen filmer funnet med ditt søk.</p>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);
-}
+};

@@ -6,8 +6,8 @@ import {getDoc, doc} from "firebase/firestore";
 import {db} from "../../config/FbConfig";
 import {useFirebase} from "../../config/FbContext";
 import {updateRating} from "../../services/RatingService";
-import {removeWatched, updateWatched} from "../../services/WatchedService";
-import {addFavorite, removeFavorite} from "../../services/FavoriteService";
+import {watchedService} from "../../services/WatchedService";
+import {favoriteService} from "../../services/FavoriteService";
 
 export const MovieDetails = () => {
 	const { id } = useParams();
@@ -45,10 +45,10 @@ export const MovieDetails = () => {
 					const userDoc = await getDoc(userDocRef);
 					if (userDoc.exists()) {
 						setUser(userDoc.data());
-						if (userDoc.data().favorites.some(favorite => favorite === id)) {
+						if (userDoc.data().favorites.some(favorite => favorite.id === id)) {
 							setFavorite(true);
 						}
-						if (userDoc.data().watched.some(watched => watched === id)) {
+						if (userDoc.data().watched.some(watch => watch.id === id)) {
 							setWatched(true);
 						}
 					} else {
@@ -81,7 +81,7 @@ export const MovieDetails = () => {
 		let success = await updateRating(userRating, id, currentUser, user, movie);
 		if(success) {
 			setRating(userRating)
-			await handleWatched();
+			await handleWatched(false);
 			setRated(true)
 			setMessage('')
 		} else {
@@ -89,42 +89,32 @@ export const MovieDetails = () => {
 		}
 			setOpenRating(false)
 	};
-	const handleWatched = async () => {
-		let success = await updateWatched(id,currentUser)
-		if(success) {
+	const handleWatched = async (deleteWatched) => {
+		let success = await watchedService(id,currentUser,movie, deleteWatched)
+		if(success === "added") {
 			setWatched(true)
+			setMessage('')
+		} else if (success === "removed") {
+			setWatched(false)
 			setMessage('')
 		} else {
 			setMessage("Feil ved sett film")
 		}
 	}
-	const handleUnwatched = async () => {
-		let success = await removeWatched(id,currentUser)
-		if(success) {
-			setWatched(false)
-			setMessage('')
-		} else {
-			setMessage("Feil ved fjerne sett film")
-		}
-	}
-	const handleFavorite = async () => {
-		let success = await addFavorite(id,currentUser, setFavorite)
-		if(success) {
+	
+	const handleFavorite = async (deleteFavorite) => {
+		let success = await favoriteService(id,currentUser, movie,deleteFavorite)
+		if(success === "added") {
 			setFavorite(true)
+			setMessage('')
+		} else if (success === "removed") {
+			setFavorite(false)
 			setMessage('')
 		} else {
 			setMessage("Feil ved favoritt")
 		}
 	}
-	const handleRemoveFavorite = async () => {
-		let success = await removeFavorite(id,currentUser)
-		if(success) {
-			setFavorite(false)
-			setMessage('')
-		} else {
-			setMessage("Feil ved fjerning av favoritt")
-		}
-	}
+	
 	
 	if (loading) {
 		return (
@@ -188,9 +178,9 @@ export const MovieDetails = () => {
 					<div className="container d-flex flex-column gap-2 justify-content-center mb-2">
 						<div className="container gap-2 d-flex justify-content-center">
 							{!user && <button className="btn btn-success" onClick={() => navigate('/signin')}>Logg inn for å vurdere film</button>}
-							{user && (favorite ? <button className="btn btn-danger" onClick={() => handleRemoveFavorite()} title="Fjern fra favoritter"><i className="fa-solid fa-heart"></i></button> : <button className="btn btn-primary" onClick={() => handleFavorite()} title="Legg til Favoritter"><i className="fa-regular fa-heart"></i></button>)}
+							{user && (favorite ? <button className="btn btn-danger" onClick={() => handleFavorite(true)} title="Fjern fra favoritter"><i className="fa-solid fa-heart"></i></button> : <button className="btn btn-primary" onClick={() => handleFavorite(false)} title="Legg til Favoritter"><i className="fa-regular fa-heart"></i></button>)}
 							{user && (rated ? <button className="btn btn-secondary" disabled title="Allerede vurdert">Allerede vurdert</button> : <button className="btn btn-primary" onClick={() => setOpenRating(!openRating)} title="Sett rating">Legg til vurdering</button>)}
-							{user && (watched ? <button className="btn btn-danger" onClick={() => handleUnwatched()} title="Fjern fra sette filmer"><i className="fa-regular fa-eye"></i></button> : <button className="btn btn-primary" onClick={() => handleWatched()} title="Legg til i sette filmer"><i className="fa-regular fa-eye-slash"></i></button>)}
+							{user && (watched ? <button className="btn btn-danger" onClick={() => handleWatched(true)} title="Fjern fra sette filmer"><i className="fa-regular fa-eye"></i></button> : <button className="btn btn-primary" onClick={() => handleWatched(false)} title="Legg til i sette filmer"><i className="fa-regular fa-eye-slash"></i></button>)}
 						</div>
 						{openRating && <div className="container gap-1 d-flex rating-dice justify-content-center">
 							{diceIcons.map((icon, index) => <i key={index} className={icon} onClick={() => handleRating(index+1)}></i>)}

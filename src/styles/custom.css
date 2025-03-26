@@ -21,10 +21,9 @@ body {
 .movie-details {
   cursor: pointer;
   transition: all 0.5s ease;
-}
-.movie-details:hover {
-  transform: scale(1.02);
-  
+  background: none;
+  position: relative;
+  overflow: hidden;
 }
 .nav-icons {
   font-size: 25px;
@@ -51,4 +50,38 @@ img {
   cursor: pointer;
   transition: all 0.5s ease;
   margin: 0;
+}
+.type-select-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 35vw;
+}
+.new-search-btn {
+  width: 40vw;
+  max-width: 150px;
+  padding: 8px;
+}
+.movie-details .hover-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 10;
+}
+
+.movie-details:hover .hover-info {
+  opacity: 1; /* Make visible on hover */
+  visibility: visible; /* Show content */
 }
