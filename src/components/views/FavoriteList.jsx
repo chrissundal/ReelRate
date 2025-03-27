@@ -15,7 +15,7 @@ export const FavoriteList = ({user}) => {
 	if(favoriteMovies.length === 0) return (
 		<div className="row p-1">
 			<div className="d-flex justify-content-center align-items-center" style={{ height: "200px" }}>
-				<h2 className="text-center">Du har ingen favoritter enda</h2>
+				<h2 className="text-center text-light">Du har ingen favoritter enda</h2>
 			</div>
 		</div>
 	)
@@ -23,23 +23,23 @@ export const FavoriteList = ({user}) => {
 		<div className="row p-1">
 			{user &&
 				<div>
-					<h2 className="text-center mb-2">Favoritter</h2>
+					<h2 className="text-center mb-2 text-light">Favoritter</h2>
 					<table className="table table-hover m-0">
-						<thead className="thead-dark text-center">
+						<thead className="thead-light text-center text-light">
 						<tr>
-							<th scope="col" style={{ width: "80px" }}></th>
-							<th scope="col">Tittel</th>
-							<th scope="col">Type</th>
+							<th className="bg-transparent text-light" scope="col" style={{ width: "80px" }}></th>
+							<th className="bg-transparent text-light" scope="col">Tittel</th>
+							<th className="bg-transparent text-light" scope="col">Type</th>
 						</tr>
 						</thead>
 						<tbody>
 						{favoriteMovies.map((movie, index) => (
 							<tr key={index} className="align-middle text-center favorite-movie" onClick={() => handleShowDetailsFavorite(movie.id)}>
-								<td>
+								<td className="bg-transparent">
 									<img src={movie.poster} alt={movie.title} className="img-fluid rounded" style={{ maxWidth: "60px" }}/>
 								</td>
-								<td>{movie.title}</td>
-								<td className="text-capitalize">{movie.type}</td>
+								<td className="bg-transparent text-light">{movie.title}</td>
+								<td className="text-capitalize bg-transparent text-light">{movie.type}</td>
 							</tr>
 						))}
 						</tbody>

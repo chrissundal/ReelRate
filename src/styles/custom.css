@@ -14,10 +14,10 @@ body {
   --bs-primary: rgba(64, 63, 63, 0.78);
   --bs-secondary: #5882a8;
 }
-.navbar {
-  background-color: var(--bs-primary);
-  color: white;
-}
+/*.navbar {*/
+/*  background-color: var(--bs-primary);*/
+/*  color: white;*/
+/*}*/
 .movie-details {
   cursor: pointer;
   transition: all 0.5s ease;
@@ -82,6 +82,6 @@ img {
 }
 
 .movie-details:hover .hover-info {
-  opacity: 1; /* Make visible on hover */
-  visibility: visible; /* Show content */
+  opacity: 1;
+  visibility: visible;
 }

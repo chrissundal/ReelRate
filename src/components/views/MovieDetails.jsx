@@ -9,6 +9,7 @@ import {updateRating} from "../../services/RatingService";
 import {watchedService} from "../../services/WatchedService";
 import {favoriteService} from "../../services/FavoriteService";
 
+
 export const MovieDetails = () => {
 	const { id } = useParams();
 	const { currentUser } = useFirebase();
@@ -17,6 +18,7 @@ export const MovieDetails = () => {
 	const [loading, setLoading] = useState(true);
 	const [message, setMessage] = useState(null);
 	const [user, setUser] = useState(null);
+	const [avgRating, setAvgRating] = useState(0);
 	const [favorite, setFavorite] = useState(false);
 	const [watched, setWatched] = useState(false);
 	const [rated, setRated] = useState(false);
@@ -63,6 +65,7 @@ export const MovieDetails = () => {
 			const fetchedRatings = await getDoc(doc(db, "ratings", id));
 			const ratings = fetchedRatings.data();
 			if(!ratings) return;
+			setAvgRating(ratings.avgRating);
 			if(currentUser) {
 				const userRating = ratings.rating.find(rating => rating.userId === currentUser.uid);
 				if(userRating) {
@@ -103,7 +106,7 @@ export const MovieDetails = () => {
 	}
 	
 	const handleFavorite = async (deleteFavorite) => {
-		let success = await favoriteService(id,currentUser, movie,deleteFavorite)
+		let success = await favoriteService(id,currentUser,movie,deleteFavorite)
 		if(success === "added") {
 			setFavorite(true)
 			setMessage('')
@@ -115,7 +118,6 @@ export const MovieDetails = () => {
 		}
 	}
 	
-	
 	if (loading) {
 		return (
 			<div className="container text-center my-5">
@@ -125,7 +127,7 @@ export const MovieDetails = () => {
 	}
 	if (!movie) {
 		return (
-			<div className="container my-5">
+			<div className="container my-5 text-light">
 				<h2>Filmen ble ikke funnet</h2>
 				<button className="btn btn-primary mt-3" onClick={() => navigate('/')}>Tilbake til søk</button>
 			</div>
@@ -134,7 +136,7 @@ export const MovieDetails = () => {
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="container my-4">
 			<div className="container d-flex gap-5 mb-3">
-			<button className="btn btn-outline-secondary" onClick={() => navigate(-1)}><i className="fa-solid fa-arrow-left"></i> Tilbake</button>
+			<button className="btn btn-outline-light" onClick={() => navigate(-1)}><i className="fa-solid fa-arrow-left"></i> Tilbake</button>
 			{rated && <i style={{fontSize: '40px', color: 'goldenrod'}} className={diceIcons[rating-1]}></i>}
 			</div>
 			<div className="row">
@@ -146,8 +148,8 @@ export const MovieDetails = () => {
 					)}
 				</div>
 				<div className="col-md-8">
-					<h1>{movie.Title} <span className="text-muted">({movie.Year})</span></h1>
-					<div className="mb-3">
+					<h1 className="text-light">{movie.Title} <span className="text-light">({movie.Year})</span></h1>
+					<div className="mb-3 text-light">
 						<span className="badge bg-secondary me-2">{movie.Rated}</span>
 						<span className="me-2">•</span>
 						<span className="me-2">{movie.Runtime}</span>
@@ -157,30 +159,32 @@ export const MovieDetails = () => {
 						<span>{movie.Released}</span>
 					</div>
 
-					<div className="mb-3">
+					<div className="mb-2 text-light">
 						<strong>IMDb-vurdering:</strong> {movie.imdbRating}/10
 					</div>
-
-					<div className="mb-3">
+					<div className="mb-2 text-light">
+						{avgRating ? <div><strong>ReelRating:</strong> {avgRating}/6</div> : <div><strong>ReelRating:</strong> Ikke vurdert enda</div>}
+					</div>
+					<div className="mb-3 text-light">
 						<h5>Sammendrag</h5>
 						<p>{movie.Plot}</p>
 					</div>
 
-					<div className="mb-3">
+					<div className="mb-3 text-light">
 						<h5>Skuespillere</h5>
 						<p>{movie.Actors}</p>
 					</div>
 
-					<div className="mb-3">
+					<div className="mb-3 text-light">
 						<h5>Regissør</h5>
 						<p>{movie.Director}</p>
 					</div>
 					<div className="container d-flex flex-column gap-2 justify-content-center mb-2">
 						<div className="container gap-2 d-flex justify-content-center">
 							{!user && <button className="btn btn-success" onClick={() => navigate('/signin')}>Logg inn for å vurdere film</button>}
-							{user && (favorite ? <button className="btn btn-danger" onClick={() => handleFavorite(true)} title="Fjern fra favoritter"><i className="fa-solid fa-heart"></i></button> : <button className="btn btn-primary" onClick={() => handleFavorite(false)} title="Legg til Favoritter"><i className="fa-regular fa-heart"></i></button>)}
-							{user && (rated ? <button className="btn btn-secondary" disabled title="Allerede vurdert">Allerede vurdert</button> : <button className="btn btn-primary" onClick={() => setOpenRating(!openRating)} title="Sett rating">Legg til vurdering</button>)}
-							{user && (watched ? <button className="btn btn-danger" onClick={() => handleWatched(true)} title="Fjern fra sette filmer"><i className="fa-regular fa-eye"></i></button> : <button className="btn btn-primary" onClick={() => handleWatched(false)} title="Legg til i sette filmer"><i className="fa-regular fa-eye-slash"></i></button>)}
+							{user && (favorite ? <button className="btn btn-danger" onClick={() => handleFavorite(true)} title="Fjern fra favoritter"><i style={{fontSize: '30px'}} className="fa-solid fa-heart-circle-minus"></i></button> : <button className="btn btn-light" onClick={() => handleFavorite(false)} title="Legg til Favoritter"><i style={{fontSize: '30px'}} className="fa-solid fa-heart-circle-plus text-secondary"></i></button>)}
+							{user && (rated ? <button className="btn btn-secondary" disabled style={{fontSize: '18px', fontWeight: 'bold'}} title="Allerede vurdert">Allerede vurdert</button> : <button className="btn btn-light text-secondary" onClick={() => setOpenRating(!openRating)} style={{fontSize: '18px', fontWeight: 'bold'}} title="Sett rating">Legg til vurdering</button>)}
+							{user && (watched ? <button className="btn btn-danger" onClick={() => handleWatched(true)} title="Fjern fra sette filmer"><i style={{fontSize: '30px'}} className="fa-regular fa-eye-slash"></i></button> : <button className="btn btn-light" onClick={() => handleWatched(false)} title="Legg til i sette filmer"><i style={{fontSize: '30px'}} className="fa-regular fa-eye text-secondary"></i></button>)}
 						</div>
 						{openRating && <div className="container gap-1 d-flex rating-dice justify-content-center">
 							{diceIcons.map((icon, index) => <i key={index} className={icon} onClick={() => handleRating(index+1)}></i>)}

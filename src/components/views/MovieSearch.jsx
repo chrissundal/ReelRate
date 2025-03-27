@@ -16,7 +16,6 @@ export const MovieSearch = () => {
 		hasSearched,
 		type,
 		searchMovies,
-		resetSearch,
 		handleTypeChange
 	} = useMovieSearch(searchParams.get('query') || '', searchParams.get('type') || '', setSearchParams, movieIds);
 	const movieTypes = [
@@ -78,7 +77,7 @@ export const MovieSearch = () => {
 						{movieTypes.map((movieType) => (
 							<div key={movieType.value} className="form-check type-select-btn p-2 ">
 								<input type="radio" className="btn-check" name="type" id={movieType.value} value={movieType.value} checked={type === movieType.value} onChange={(e) => handleTypeChange(e.target.value)}/>
-								<label className={`btn ${type === movieType.value ? 'btn-secondary text-center p-2' : 'btn-outline-secondary text-center p-2'}`} htmlFor={movieType.value} style={{ fontWeight: 'bold'}}>{movieType.name}</label>
+								<label className={`btn ${type === movieType.value ? 'btn-light disabled text-center text-light p-2' : 'btn-outline-light text-center p-2'}`} htmlFor={movieType.value} style={{fontWeight: 'bold', pointerEvents: type === movieType.value ? 'none' : 'auto', opacity: type === movieType.value ? 0.6 : 1}}>{movieType.name}</label>
 							</div>
 						))}
 					</div>
@@ -87,30 +86,24 @@ export const MovieSearch = () => {
 
 			<div className="row mb-4">
 				<div className="col">
-					{!hasSearched && (
-						<div className="input-group">
-							<input type="text" className="form-control" placeholder="Søk etter filmer..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}/>
-							<button className="btn btn-secondary" style={{fontWeight: 'bold'}} onClick={handleSearchClick} disabled={loading}>{loading ? 'Søker...' : 'Søk'}</button>
+					<div className="input-group">
+						<div className="form-floating text-secondary">
+							<input type="text" className="form-control shadow-none border-0 bg-light text-secondary" id="searchField" placeholder="søk" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}/>
+							<label htmlFor="searchField" className="text-secondary">Søk etter filmer...</label>
 						</div>
-					)}
-					{hasSearched && !loading && (
-						<div className="container d-flex justify-content-center">
-							<button className="btn btn-secondary new-search-btn" onClick={resetSearch}>
-								Nytt søk
-							</button>
-						</div>
-					)}
+						<button className="btn btn-light shadow-none border-0 text-secondary" style={{fontWeight: 'bold'}} onClick={handleSearchClick} disabled={loading}>{loading ? 'Søker...' : 'Søk'}</button>
+					</div>
 				</div>
 			</div>
-			
-			<div className="container rounded-3" style={{ backgroundColor: '#f8f9fa'}}>
-				<div className="row p-2">
+
+			{hasSearched && <div className="container rounded-3">
+				<div className="row">
 					{movies.map((movie) => (
-						<div key={movie.imdbID} className="col-md-4 mb-4">
-							<div className="card border-0 h-100 movie-details" onClick={() => handleShowDetails(movie)}>
-								<div className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
+						<div key={movie.imdbID} className="col-sm-4 mb-2 p-3">
+							<div className="card border-0 movie-details" onClick={() => handleShowDetails(movie)}>
+								<div className="d-flex justify-content-center align-items-center" >
 									{movie.Poster !== "N/A" ? (
-										<img src={movie.Poster} className="card border-0" alt={movie.Title} />
+										<img src={movie.Poster} className="card border-0" alt={movie.Title} style={{ width: '100%' }}/>
 									) : (
 										<div className="no-image text-center p-5 bg-light">Ingen bilde</div>
 									)}
@@ -133,12 +126,16 @@ export const MovieSearch = () => {
 					))}
 
 					{movies.length === 0 && !loading && searchTerm && hasSearched && (
-						<div className="col-12 text-center">
-							<p>Ingen filmer funnet med ditt søk.</p>
+						<div className="col-12 text-center p-2 mt-3 text-light">
+							<p>Ingen resultater funnet med ditt søk.</p>
 						</div>
 					)}
+					{loading && <div className="container text-center my-5">
+						<div className="spinner-border" role="status"></div>
+					</div>}
 				</div>
-			</div>
+			</div> 
+			}
 		</div>
 	);
 };

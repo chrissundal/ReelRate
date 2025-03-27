@@ -104,7 +104,7 @@ export const MovieStart = () => {
 	}, [movieIds, user]);
 
 	return (
-		<div className="container rounded-3 mt-2 mb-2" style={{ backgroundColor: '#f8f9fa'}}>
+		<div className="container mt-2 mb-2">
 			<div className="row p-3">
 				{isLoading ? (
 					<div className="d-flex justify-content-center">
@@ -114,11 +114,11 @@ export const MovieStart = () => {
 					</div>
 				) : movies.length > 0 ? (
 					movies.map((movie) => (
-						<div key={movie.imdbID} className="col-md-4 mb-4">
-							<div className="card border-0 h-100 movie-details" onClick={() => handleShowDetails(movie)}>
-								<div className="d-flex justify-content-center align-items-center" style={{ width: '100%' }}>
+						<div key={movie.imdbID} className="col-sm-4 mb-4">
+							<div className="card border-0 movie-details" onClick={() => handleShowDetails(movie)}>
+								<div className="d-flex justify-content-center align-items-center" >
 									{movie.Poster !== "N/A" ? (
-										<img src={movie.Poster} className="card border-0" alt={movie.Title} />
+										<img src={movie.Poster} className="card border-0" alt={movie.Title} style={{ width: '100%' }}/>
 									) : (
 										<div className="no-image text-center p-5 bg-light">Ingen bilde</div>
 									)}

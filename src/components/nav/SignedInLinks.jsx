@@ -24,7 +24,7 @@ export const SignedInLinks = () => {
 	return (
 		<div className="navbar-nav">
 			<button
-				className="navbar-toggler d-md-none mx-3"
+				className="navbar-toggler d-md-none mx-3 border-0 shadow-none"
 				type="button"
 				onClick={toggleMenu}
 				aria-expanded={isMenuOpen ? "true" : "false"}

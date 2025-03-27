@@ -14,7 +14,6 @@ export const useMovieSearch = (initialSearchTerm = '', initialType = 'all', setS
 		setLoading(true);
 		setHasSearched(true);
 		setType(actualType);
-
 		setSearchParams({
 			query: searchTerm,
 			type: actualType,
@@ -35,7 +34,6 @@ export const useMovieSearch = (initialSearchTerm = '', initialType = 'all', setS
 						avgRating: movieIdMap.get(movie.imdbID) || null,
 					};
 				});
-
 				setMovies(searchResult);
 			} else {
 				setMovies([]);
@@ -47,15 +45,7 @@ export const useMovieSearch = (initialSearchTerm = '', initialType = 'all', setS
 			setLoading(false);
 		}
 	}, [searchTerm, type, setSearchParams, movieIds]);
-
-	const resetSearch = useCallback(() => {
-		setSearchTerm('');
-		setType('all');
-		setMovies([]);
-		setHasSearched(false);
-		setSearchParams({});
-	}, [setSearchParams]);
-
+	
 	const handleTypeChange = useCallback((value) => {
 		setType(value);
 		if (searchTerm) {
@@ -72,7 +62,6 @@ export const useMovieSearch = (initialSearchTerm = '', initialType = 'all', setS
 		hasSearched,
 		type,
 		searchMovies,
-		resetSearch,
 		handleTypeChange
 	};
 };

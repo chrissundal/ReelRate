@@ -20,7 +20,7 @@ export const WatchList = ({user}) => {
 	if(watchedMovies.length === 0) return (
 		<div className="row p-1">
 			<div className="d-flex justify-content-center align-items-center" style={{ height: "200px" }}>
-				<h2 className="text-center">Du har ikke sett noen filmer enda</h2>
+				<h2 className="text-center text-light">Du har ikke sett noen filmer enda</h2>
 			</div>
 		</div>
 	)
@@ -29,23 +29,23 @@ export const WatchList = ({user}) => {
 		<div className="row p-1">
 			{user && 
 				<div>
-					<h2 className="text-center mb-2">Sette filmer</h2>
-					<table className="table table-hover m-0">
-						<thead className="thead-dark text-center">
+					<h2 className="text-center mb-2 text-light">Sette filmer</h2>
+					<table className="table table-hover m-0 ">
+						<thead className="thead-light text-center text-light">
 						<tr>
-							<th scope="col" style={{ width: "80px" }}></th>
-							<th scope="col">Tittel</th>
-							<th scope="col">Type</th>
+							<th className="text-light bg-transparent" scope="col" style={{ width: "80px" }}></th>
+							<th className="text-light bg-transparent" scope="col">Tittel</th>
+							<th className="text-light bg-transparent" scope="col">Type</th>
 						</tr>
 						</thead>
 						<tbody>
 						{watchedMovies.map((movie, index) => (
-							<tr key={index} className="align-middle text-center favorite-movie" onClick={() => handleShowDetailsWatched(movie.id)}>
-								<td>
+							<tr key={index} className="align-middle text-center favorite-movie text-light" onClick={() => handleShowDetailsWatched(movie.id)}>
+								<td className="bg-transparent">
 									<img src={movie.poster} alt={movie.title} className="img-fluid rounded" style={{ maxWidth: "60px" }}/>
 								</td>
-								<td>{movie.title}</td>
-								<td className="text-capitalize">{movie.type}</td>
+								<td className="text-light bg-transparent">{movie.title}</td>
+								<td className="text-capitalize text-light bg-transparent">{movie.type}</td>
 							</tr>
 						))}
 						</tbody>
