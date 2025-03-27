@@ -6,14 +6,16 @@ ReelRate er en React-basert webapplikasjon som lar brukere utforske, søke og la
 
 ## 📋 Innholdsfortegnelse
 
-- [Funksjoner](#funksjoner)
-- [Demo](#demo)
-- [Teknologier](#teknologier)
-- [Installasjon](#installasjon)
-- [Bruk](#bruk)
-- [API-referanse](#api-referanse)
-- [Skjermbilder](#skjermbilder)
-- [Kontakt](#kontakt)
+***
+* [Funksjoner](#-funksjoner)
+* [Demo](#-demo)
+* [Teknologier](#-teknologier)
+* [Installasjon](#-installasjon)
+* [Bruk](#-bruk)
+* [API-referanse](#-api-referanse)
+* [Skjermbilder](#-skjermbilder)
+* [Kontakt](#-kontakt)
+***
 
 ## ✨ Funksjoner
 
@@ -26,12 +28,13 @@ ReelRate er en React-basert webapplikasjon som lar brukere utforske, søke og la
 - **Profilhåndtering**: Administrer watchlist og favoritter
 - **Caching**: ReelRate cacher filmer man har vært inne på eller fått forslag om i 24 timer så om man er mye inn og ut av filmer vil responsen være rask.
 - **Mobil**: ReelRate tilpasser seg mobil, nettbrett og desktop sømløst
-
+***
 ## 🚀 Demo
 
 Prøv applikasjonen live på: [ReelRate](https://reelrate-6f7a8.web.app/)
 Prøv og registrer deg!
 
+***
 ## 💻 Teknologier
 
 - **Frontend**: React 19.0.0, React Router 7.4.0
@@ -39,7 +42,7 @@ Prøv og registrer deg!
 - **Backend/Database**: Firebase FireStore 11.4.0
 - **Autentisering**: Firebase Authentication
 - **Andre verktøy**: npm, Git, lodash, Axios.
-
+***
 ## 📦 Installasjon
 
 For å sette opp prosjektet lokalt, følg disse trinnene:
@@ -73,7 +76,7 @@ For å sette opp prosjektet lokalt, følg disse trinnene:
    ```
    npm start
    ```
-
+***
 ## 🔧 Bruk
 
 1. Åpne nettleseren og gå til `http://localhost:3000`
@@ -81,7 +84,7 @@ For å sette opp prosjektet lokalt, følg disse trinnene:
 3. Utforsk filmene på startsiden eller søk etter spesifikke titler
 4. Klikk på en film for å se detaljert informasjon
 5. Lagre favorittfilmer til din profil
-
+***
 ## 📚 API-referanse
 
 ReelRate bruker [OMDb API](https://www.omdbapi.com/) for filmdata.
@@ -90,12 +93,12 @@ For å bruke API-et trenger du å:
 1. Registrere deg for en konto på OMDb
 2. Få en API-nøkkel
 3. Legg til nøkkelen i `.env`-filen som `REACT_APP_OMDB_API_KEY`
-
+***
 ##  📸 Skjermbilder
 ![ReelRate Skjermbilde](/public/img/reelrate.png)
 ![ReelRate Skjermbilde Mobil](/public/img/reelrate-mobil.png)        ![ReelRate Skjermbilde Mobil 2](/public/img/reelrate-mobil2.png)
 
-
+***
 ## 📞 Kontakt
 
 Prosjekt opprettet av [Christoffer Sundal Jacobsen](https://github.com/chrissundal) - føl deg fri til å kontakte meg!
