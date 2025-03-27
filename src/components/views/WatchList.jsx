@@ -30,6 +30,7 @@ export const WatchList = ({user}) => {
 			{user && 
 				<div>
 					<h2 className="text-center mb-2 text-light">Sette filmer</h2>
+					<div className="profile-scrollbar">
 					<table className="table table-hover m-0 ">
 						<thead className="thead-light text-center text-light">
 						<tr>
@@ -50,6 +51,7 @@ export const WatchList = ({user}) => {
 						))}
 						</tbody>
 					</table>
+					</div>
 				</div>
 			}
 		</div>

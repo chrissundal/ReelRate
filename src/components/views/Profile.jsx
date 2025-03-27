@@ -1,47 +1,37 @@
 import {useEffect, useState} from "react";
-import {useFirebase} from "../../config/FbContext";
-import {doc, getDoc} from "firebase/firestore";
-import {db} from "../../config/FbConfig";
 import {FavoriteList} from "./FavoriteList";
 import { motion } from 'framer-motion';
 import {WatchList} from "./WatchList";
+import { useUser } from "../../services/FetchUser";
+
 export const Profile = () => {
-	const { currentUser } = useFirebase();
-	const [user, setUser] = useState(null);
+	const { user, isLoading: userLoading } = useUser();
 	const [favIsOpen, setFavIsOpen] = useState(true);
 	const [watchedIsOpen, setWatchedIsOpen] = useState(true);
-	
+
 	useEffect(() => {
-		const fetchUser = async () => {
-			if (!currentUser) {
-				setUser(null);
-				return;
-			}
-			try {
-				const userDocRef = doc(db, "users", currentUser.uid);
-				const userDoc = await getDoc(userDocRef);
-				if (userDoc.exists()) {
-					setUser(userDoc.data());
-				} else {
-					setUser(null);}
-			} catch (error) {
-				console.error("Error fetching user: ", error);
-				setUser(null);
-			}
-		}
-		fetchUser();
-	}, [currentUser]);
+		document.title = 'Profil | ReelRate';
+		return () => {
+			document.title = 'ReelRate';
+		};
+	}, []);
+	
+	if(userLoading) return (
+		<div className="container text-center my-5">
+			<div className="spinner-border" role="status"></div>
+		</div>
+	)
 	
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="container my-4">
-			<div className="container mt-2">
-				{ favIsOpen && user && <div className="container p-0 border-0"><FavoriteList user={user}/></div> }
-				<div className="container my-2">
-					{favIsOpen ? <button className="btn btn-outline-light" style={{fontWeight: 'bold'}} onClick={() => setFavIsOpen(false)}>Minimer Favoritter</button> : <button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setFavIsOpen(true)}>Åpne Favoritter</button>}
+			<div className="container align-middle">
+				{ favIsOpen && user && <div className="container p-0 border-0" style={{maxWidth: '800px'}}><FavoriteList user={user}/></div> }
+				<div className="container my-2 d-flex justify-content-center">
+					{favIsOpen ? <button className="btn btn-outline-light" style={{fontWeight: 'bold',maxWidth: '800px'}} onClick={() => setFavIsOpen(false)}>Minimer Favoritter</button> : <button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setFavIsOpen(true)}>Åpne Favoritter</button>}
 				</div>
-				{ watchedIsOpen && user && <div className="container p-0 border-0"><WatchList user={user}/></div> }
-				<div className="container my-2">
-					{watchedIsOpen ? <button className="btn btn-outline-light" style={{fontWeight: 'bold'}} onClick={() => setWatchedIsOpen(false)}>Minimer Watchlist</button> : <button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setWatchedIsOpen(true)}>Åpne Watchlist</button>}
+				{ watchedIsOpen && user && <div className="container p-0 border-0" style={{maxWidth: '800px'}}><WatchList user={user}/></div> }
+				<div className="container my-2 d-flex justify-content-center">
+					{watchedIsOpen ? <button className="btn btn-outline-light" style={{fontWeight: 'bold',maxWidth: '800px'}} onClick={() => setWatchedIsOpen(false)}>Minimer Watchlist</button> : <button className="btn btn-outline-secondary" style={{fontWeight: 'bold'}} onClick={() => setWatchedIsOpen(true)}>Åpne Watchlist</button>}
 				</div>
 			</div>
 		</motion.div>

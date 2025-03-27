@@ -23,7 +23,7 @@ export const useMovieSearch = (initialSearchTerm = '', initialType = 'all', setS
 
 		try {
 			const res = await axios.get(
-				`http://www.omdbapi.com/?s=${searchTerm}${selectedType}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
+				`https://www.omdbapi.com/?s=${searchTerm}${selectedType}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
 			);
 
 			if (res.data.Response === "True") {

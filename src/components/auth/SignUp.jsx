@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { createUserWithEmailAndPassword , updateProfile} from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import {auth, db} from "../../config/FbConfig";
@@ -12,6 +12,13 @@ export const SignUp = () => {
 	const [lastName, setLastName] = useState('');
 	const [error, setError] = useState(null);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		document.title = 'Registrer | ReelRate';
+		return () => {
+			document.title = 'ReelRate';
+		};
+	}, []);
 	const handleSignup = async (e) => {
 		e.preventDefault();
 		setError(null)

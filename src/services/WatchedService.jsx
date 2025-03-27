@@ -4,12 +4,10 @@ import {db} from "../config/FbConfig";
 export const watchedService = async (id, currentUser, movie, deleteWatched) => {
 	try {
 		const userDocRef = doc(db, "users", currentUser.uid);
-
 		if (deleteWatched) {
 			const userDoc = await getDoc(userDocRef);
 			const userData = userDoc.data();
 			const existingWatched = userData.watched.find(w => w.id === id);
-
 			if (existingWatched) {
 				await updateDoc(userDocRef, {
 					watched: arrayRemove(existingWatched)
@@ -24,7 +22,6 @@ export const watchedService = async (id, currentUser, movie, deleteWatched) => {
 				type: movie.Type,
 				date: new Date()
 			}
-
 			await updateDoc(userDocRef, {
 				watched: arrayUnion(watched)
 			});

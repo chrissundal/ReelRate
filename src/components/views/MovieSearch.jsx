@@ -32,6 +32,13 @@ export const MovieSearch = () => {
 	}, [searchMovies]);
 
 	useEffect(() => {
+		document.title = 'Søk | ReelRate';
+		return () => {
+			document.title = 'ReelRate';
+		};
+	}, []);
+	
+	useEffect(() => {
 		if (isInitialMount.current) {
 			isInitialMount.current = false;
 			return;
@@ -97,7 +104,7 @@ export const MovieSearch = () => {
 			</div>
 
 			{hasSearched && <div className="container rounded-3">
-				<div className="row">
+				<div className="row search-scrollContainer">
 					{movies.map((movie) => (
 						<div key={movie.imdbID} className="col-sm-4 mb-2 p-3">
 							<div className="card border-0 movie-details" onClick={() => handleShowDetails(movie)}>

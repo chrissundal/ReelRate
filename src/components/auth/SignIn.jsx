@@ -1,12 +1,20 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/FbConfig';
 import {NavLink, useNavigate} from "react-router-dom";
+
 export const SignIn = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 	const navigate = useNavigate()
+
+	useEffect(() => {
+		document.title = 'Logg inn | ReelRate';
+		return () => {
+			document.title = 'ReelRate';
+		};
+	}, []);
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		setError(null)

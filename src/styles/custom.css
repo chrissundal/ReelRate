@@ -4,26 +4,21 @@
   font-weight: 500;
 }
 body {
-  min-height: 100vh;
-  background: url("/public/img/movieapp.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  margin: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  color: white; 
+  background: linear-gradient(to bottom, #0f0f0f, #1a1a2e, #121212); /* Smooth dark gradient */
+  position: relative;
 }
-:root {
-  --bs-primary: rgba(64, 63, 63, 0.78);
-  --bs-secondary: #5882a8;
-}
-/*.navbar {*/
-/*  background-color: var(--bs-primary);*/
-/*  color: white;*/
-/*}*/
+
 .movie-details {
   cursor: pointer;
   transition: all 0.5s ease;
   background: none;
   position: relative;
   overflow: hidden;
+  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.5);
 }
 .nav-icons {
   font-size: 25px;
@@ -84,4 +79,32 @@ img {
 .movie-details:hover .hover-info {
   opacity: 1;
   visibility: visible;
+}
+.profile-scrollbar {
+  max-height: 30vh;
+  overflow-y: scroll;
+  scrollbar-color: #ff416c #1a1a2e;
+  scrollbar-base-color: transparent;
+  scrollbar-width: thin;
+}
+.search-scrollContainer {
+  max-height: 63vh;
+  overflow-y: scroll;
+  scrollbar-color: #ff416c #1a1a2e;
+  scrollbar-base-color: transparent;
+  scrollbar-width: thin;
+}
+.home-scrollContainer {
+  max-height: 85vh;
+  overflow-y: scroll;
+  scrollbar-color: #ff416c #1a1a2e;
+  scrollbar-base-color: transparent;
+  scrollbar-width: thin;
+}
+.details-scrollContainer {
+  max-height: 75vh;
+  overflow-y: scroll;
+  scrollbar-color: #ff416c #1a1a2e;
+  scrollbar-base-color: transparent;
+  scrollbar-width: thin;
 }

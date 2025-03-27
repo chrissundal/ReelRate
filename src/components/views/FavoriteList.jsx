@@ -22,8 +22,9 @@ export const FavoriteList = ({user}) => {
 	return (
 		<div className="row p-1">
 			{user &&
-				<div>
+				<div >
 					<h2 className="text-center mb-2 text-light">Favoritter</h2>
+					<div className="profile-scrollbar">
 					<table className="table table-hover m-0">
 						<thead className="thead-light text-center text-light">
 						<tr>
@@ -44,6 +45,7 @@ export const FavoriteList = ({user}) => {
 						))}
 						</tbody>
 					</table>
+					</div>
 				</div>
 			}
 		</div>

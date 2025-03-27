@@ -8,7 +8,8 @@ import {useFirebase} from "../../config/FbContext";
 import {updateRating} from "../../services/RatingService";
 import {watchedService} from "../../services/WatchedService";
 import {favoriteService} from "../../services/FavoriteService";
-
+import { movieCacheService } from "../../services/MovieCacheService";
+import { useUser } from "../../services/FetchUser";
 
 export const MovieDetails = () => {
 	const { id } = useParams();
@@ -17,7 +18,6 @@ export const MovieDetails = () => {
 	const [movie, setMovie] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [message, setMessage] = useState(null);
-	const [user, setUser] = useState(null);
 	const [avgRating, setAvgRating] = useState(0);
 	const [favorite, setFavorite] = useState(false);
 	const [watched, setWatched] = useState(false);
@@ -25,13 +25,28 @@ export const MovieDetails = () => {
 	const [openRating, setOpenRating] = useState(false);
 	const [rating, setRating] = useState(0);
 	const diceIcons = ["fa-solid fa-dice-one", "fa-solid fa-dice-two", "fa-solid fa-dice-three", "fa-solid fa-dice-four", "fa-solid fa-dice-five", "fa-solid fa-dice-six"]
+	const { user, isLoading: userLoading } = useUser();
+
+	useEffect(() => {
+		document.title = 'Filmdetaljer | ReelRate';
+		return () => {
+			document.title = 'ReelRate';
+		};
+	}, []);
 	
 	useEffect(() => {
 		const fetchMovieDetails = async () => {
 			try {
-				const response = await axios.get(`http://www.omdbapi.com/?i=${id}&plot=full&apikey=${process.env.REACT_APP_OMDB_API_KEY}`);
+				const cachedMovie = movieCacheService.getMovieFromCache(id);
+				if (cachedMovie) {
+					setMovie(cachedMovie);
+					setLoading(false);
+					return;
+				}
+				const response = await axios.get(`https://www.omdbapi.com/?i=${id}&plot=full&apikey=${process.env.REACT_APP_OMDB_API_KEY}`);
 				if (response.data.Response === "True") {
 					setMovie(response.data);
+					movieCacheService.cacheMovie(response.data);
 				}
 			} catch (error) {
 				console.error("Feil ved henting av filmdetaljer:", error);
@@ -40,27 +55,6 @@ export const MovieDetails = () => {
 			}
 		};
 		
-		const fetchUser = async () => {
-			try {
-				if (currentUser) {
-					const userDocRef = doc(db, "users", currentUser.uid);
-					const userDoc = await getDoc(userDocRef);
-					if (userDoc.exists()) {
-						setUser(userDoc.data());
-						if (userDoc.data().favorites.some(favorite => favorite.id === id)) {
-							setFavorite(true);
-						}
-						if (userDoc.data().watched.some(watch => watch.id === id)) {
-							setWatched(true);
-						}
-					} else {
-						setUser(null);}
-				}
-			} catch (error) {
-				console.error("Error fetching user: ", error);
-				setUser(null);
-			}
-		}
 		const fetchRatings = async () => {
 			const fetchedRatings = await getDoc(doc(db, "ratings", id));
 			const ratings = fetchedRatings.data();
@@ -74,11 +68,26 @@ export const MovieDetails = () => {
 				}
 			}
 		}
-		fetchUser();
+		movieCacheService.cleanCache();
 		fetchMovieDetails();
 		fetchRatings();
 	}, [id, currentUser, rated]);
-	
+
+	useEffect(() => {
+		if (user) {
+			if (user.favorites && user.favorites.some(favorite => favorite.id === id)) {
+				setFavorite(true);
+			} else {
+				setFavorite(false);
+			}
+
+			if (user.watched && user.watched.some(watch => watch.id === id)) {
+				setWatched(true);
+			} else {
+				setWatched(false);
+			}
+		}
+	}, [user, id]);
 
 	const handleRating = async (userRating) => {
 		let success = await updateRating(userRating, id, currentUser, user, movie);
@@ -117,8 +126,9 @@ export const MovieDetails = () => {
 			setMessage("Feil ved favoritt")
 		}
 	}
-	
-	if (loading) {
+	const isPageLoading = loading || userLoading;
+
+	if (isPageLoading) {
 		return (
 			<div className="container text-center my-5">
 				<div className="spinner-border" role="status"></div>
@@ -139,7 +149,7 @@ export const MovieDetails = () => {
 			<button className="btn btn-outline-light" onClick={() => navigate(-1)}><i className="fa-solid fa-arrow-left"></i> Tilbake</button>
 			{rated && <i style={{fontSize: '40px', color: 'goldenrod'}} className={diceIcons[rating-1]}></i>}
 			</div>
-			<div className="row">
+			<div className="row details-scrollContainer">
 				<div className="col-md-4 mb-4">
 					{movie.Poster !== "N/A" ? (
 						<img src={movie.Poster} className="img-fluid rounded" alt={movie.Title} />

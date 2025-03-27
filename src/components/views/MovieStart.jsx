@@ -1,65 +1,29 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import {getDocs, collection, doc, getDoc} from "firebase/firestore";
-import {db} from "../../config/FbConfig";
-import {useFirebase} from "../../config/FbContext";
+import { movieCacheService } from "../../services/MovieCacheService";
+import { useFetchRatings } from "../../services/FetchRatings";
+import { useUser } from "../../services/FetchUser";
 
 export const MovieStart = () => {
 	const [movies, setMovies] = useState([]);
 	const navigate = useNavigate();
-	const [movieIds, setMovieIds] = useState([]);
-	const [user, setUser] = useState(null);
-	const { currentUser } = useFirebase();
+	const movieIds = useFetchRatings();
+	const { user, isLoading: userLoading } = useUser();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleShowDetails = (movie) => {
+		movieCacheService.cacheMovie(movie);
 		navigate(`/movie/${movie.imdbID}`);
 	};
 	
 	useEffect(() => {
-		const fetchUser = async () => {
-			if (!currentUser) {
-				setUser(null);
-				return;
-			}
-			try {
-				const userDocRef = doc(db, "users", currentUser.uid);
-				const userDoc = await getDoc(userDocRef);
-				if (userDoc.exists()) {
-					setUser(userDoc.data());
-				} else {
-					setUser(null);
-				}
-			} catch (error) {
-				console.error("Error fetching user:", error);
-				setUser(null);
-			}
+		document.title = 'Hjem | ReelRate';
+		return () => {
+			document.title = 'ReelRate';
 		};
-		fetchUser();
-	}, [currentUser]);
-	
-	useEffect(() => {
-		if (currentUser && user === null) return;
-		const fetchRatings = async () => {
-			setIsLoading(true);
-			try {
-				const ratingsCollection = collection(db, "ratings");
-				const ratingsSnapshot = await getDocs(ratingsCollection);
-				const ratingsData = ratingsSnapshot.docs.map((doc) => ({
-					id: doc.id,
-					...doc.data(),
-				}));
-				setMovieIds(ratingsData);
-			} catch (error) {
-				console.error("Error fetching ratings:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-		fetchRatings();
-	}, [currentUser, user]);
-	
+	}, []);
+
 	useEffect(() => {
 		if (movieIds.length === 0) return;
 		const fetchMovies = async () => {
@@ -75,17 +39,30 @@ export const MovieStart = () => {
 				}
 				shuffledMovieIds.sort(() => 0.5 - Math.random());
 				const selectedMovieIds = shuffledMovieIds.slice(0, 6);
-				
+
 				let foundMovies = [];
 				for (let i = 0; i < selectedMovieIds.length; i++) {
 					try {
-						const response = await axios.get(`https://www.omdbapi.com/?i=${selectedMovieIds[i].id}&plot=short&apikey=${process.env.REACT_APP_OMDB_API_KEY}`);
-						if (response.data.Response === "True") {
+						const cachedMovie = movieCacheService.getMovieFromCache(selectedMovieIds[i].id);
+
+						if (cachedMovie) {
 							const addMovie = {
-								...response.data,
+								...cachedMovie,
 								avgRating: selectedMovieIds[i].avgRating,
 							};
 							foundMovies.push(addMovie);
+							console.log("Fra cache");
+						} else {
+							const response = await axios.get(`https://www.omdbapi.com/?i=${selectedMovieIds[i].id}&plot=short&apikey=${process.env.REACT_APP_OMDB_API_KEY}`);
+							if (response.data.Response === "True") {
+								const addMovie = {
+									...response.data,
+									avgRating: selectedMovieIds[i].avgRating,
+								};
+								movieCacheService.cacheMovie(response.data);
+								foundMovies.push(addMovie);
+								console.log("Fra api");
+							}
 						}
 					} catch (apiError) {
 						console.error(`Feil ved lasting av film ${selectedMovieIds[i].id}:`, apiError);
@@ -99,14 +76,17 @@ export const MovieStart = () => {
 				setIsLoading(false);
 			}
 		};
-		
+		movieCacheService.cleanCache();
 		fetchMovies();
 	}, [movieIds, user]);
 
+	const isPageLoading = userLoading || isLoading;
+
 	return (
 		<div className="container mt-2 mb-2">
-			<div className="row p-3">
-				{isLoading ? (
+			<div className="row p-3 home-scrollContainer">
+				{isPageLoading
+					? (
 					<div className="d-flex justify-content-center">
 						<div className="spinner-border" role="status">
 							<span className="visually-hidden">Laster...</span>
@@ -132,7 +112,6 @@ export const MovieStart = () => {
 								</div>
 							</div>
 						</div>
-
 					))
 				) : (
 					<div className="text-center">Ingen filmer funnet</div>
