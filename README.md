@@ -1,70 +1,104 @@
-# Getting Started with Create React App
+# ReelRate
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ReelRate er en React-basert webapplikasjon som lar brukere utforske, søke og lagre sine favorittfilmer. Med en intuitiv brukergrensesnitt og animerte overganger gir appen en sømløs brukeropplevelse.
 
-## Available Scripts
 
-In the project directory, you can run:
 
-### `npm start`
+## 📋 Innholdsfortegnelse
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [Funksjoner](#funksjoner)
+- [Demo](#demo)
+- [Teknologier](#teknologier)
+- [Installasjon](#installasjon)
+- [Bruk](#bruk)
+- [API-referanse](#api-referanse)
+- [Skjermbilder](#skjermbilder)
+- [Kontakt](#kontakt)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## ✨ Funksjoner
 
-### `npm test`
+- **Utforsk filmer**: Bla gjennom populære og aktuelle filmer
+- **Detaljert visning**: Se informasjon om hver film, inkludert beskrivelse, skuespillere og vurderinger
+- **Brukerkonto**: Registrer deg og logg inn for å få tilgang til personlige funksjoner
+- **Rating**: ReelRate tar andre brukeres rangeringer og legger de til i lister for forslag for andre. Man gir terningkast på en film og filmen blir filtrert ut så man ikke vil se den igjen i anbefalinger.
+- **Søk**: Finn filmer basert på tittel, sjanger eller skuespillere
+- **Responsive animasjoner**: Jevne sideoverganger med Framer Motion
+- **Profilhåndtering**: Administrer watchlist og favoritter
+- **Caching**: ReelRate cacher filmer man har vært inne på eller fått forslag om i 24 timer så om man er mye inn og ut av filmer vil responsen være rask.
+- **Mobil**: ReelRate tilpasser seg mobil, nettbrett og desktop sømløst
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🚀 Demo
 
-### `npm run build`
+Prøv applikasjonen live på: [ReelRate](https://reelrate-6f7a8.web.app/)
+Prøv og registrer deg!
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 💻 Teknologier
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Frontend**: React 19.0.0, React Router 7.4.0
+- **UI/Animasjoner**: Framer Motion 12.5.0, Bootstrap 5.3.3, FontAwesome
+- **Backend/Database**: Firebase FireStore 11.4.0
+- **Autentisering**: Firebase Authentication
+- **Andre verktøy**: npm, Git, lodash, Axios.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 📦 Installasjon
 
-### `npm run eject`
+For å sette opp prosjektet lokalt, følg disse trinnene:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. Klone repositoriet:
+   ```
+   git clone https://github.com/chrissundal/ReelRate.git
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Naviger til prosjektmappen:
+   ```
+   cd ReelRate
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Installer avhengigheter:
+   ```
+   npm install
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. Opprett en `.env`-fil i rotmappen og legg til Firebase-konfigurasjon:
+   ```
+   REACT_APP_FIREBASE_API_KEY=din-api-nøkkel
+   REACT_APP_FIREBASE_AUTH_DOMAIN=ditt-prosjekt.firebaseapp.com
+   REACT_APP_FIREBASE_PROJECT_ID=ditt-prosjekt
+   REACT_APP_FIREBASE_STORAGE_BUCKET=ditt-prosjekt.appspot.com
+   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=din-sender-id
+   REACT_APP_FIREBASE_APP_ID=ditt-app-id
+   ```
 
-## Learn More
+5. Start utviklingsserveren:
+   ```
+   npm start
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🔧 Bruk
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Åpne nettleseren og gå til `http://localhost:3000`
+2. Registrer en ny konto eller logg inn med eksisterende legitimasjon
+3. Utforsk filmene på startsiden eller søk etter spesifikke titler
+4. Klikk på en film for å se detaljert informasjon
+5. Lagre favorittfilmer til din profil
 
-### Code Splitting
+## 📚 API-referanse
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+ReelRate bruker [OMDb API](https://www.omdbapi.com/) for filmdata.
+For å bruke API-et trenger du å:
 
-### Analyzing the Bundle Size
+1. Registrere deg for en konto på OMDb
+2. Få en API-nøkkel
+3. Legg til nøkkelen i `.env`-filen som `REACT_APP_OMDB_API_KEY`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+##  📸 Skjermbilder
+![ReelRate Skjermbilde](/public/img/reelrate.png)
+![ReelRate Skjermbilde Mobil](/public/img/reelrate-mobil.png)        ![ReelRate Skjermbilde Mobil 2](/public/img/reelrate-mobil2.png)
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 📞 Kontakt
 
-### Advanced Configuration
+Prosjekt opprettet av [Christoffer Sundal Jacobsen](https://github.com/chrissundal) - føl deg fri til å kontakte meg!
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Email: christoffer.sundal@gmail.com
+- LinkedIn: [Christoffer Sundal Jacobsen](https://www.linkedin.com/in/christoffer-sundal-jacobsen/)
