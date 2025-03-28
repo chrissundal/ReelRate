@@ -108,3 +108,9 @@ img {
   scrollbar-base-color: transparent;
   scrollbar-width: thin;
 }
+.profile-user-name {
+  position: absolute;
+  top: 60px;
+  left: 40px;
+  
+}
