@@ -24,9 +24,6 @@ export const Profile = () => {
 	
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="container my-4">
-			<div className="profile-user-name text-secondary">
-				{user && <h3>{user.firstName} {user.lastName}</h3>}
-			</div>
 			<div className="container align-middle">
 				{ favIsOpen && user && <div className="container p-0 border-0" style={{maxWidth: '800px'}}><FavoriteList user={user}/></div> }
 				<div className="container my-2 d-flex justify-content-center">
