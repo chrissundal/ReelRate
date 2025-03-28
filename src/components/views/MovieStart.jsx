@@ -51,7 +51,6 @@ export const MovieStart = () => {
 								avgRating: selectedMovieIds[i].avgRating,
 							};
 							foundMovies.push(addMovie);
-							console.log("Fra cache");
 						} else {
 							const response = await axios.get(`https://www.omdbapi.com/?i=${selectedMovieIds[i].id}&plot=short&apikey=${process.env.REACT_APP_OMDB_API_KEY}`);
 							if (response.data.Response === "True") {
@@ -61,7 +60,6 @@ export const MovieStart = () => {
 								};
 								movieCacheService.cacheMovie(response.data);
 								foundMovies.push(addMovie);
-								console.log("Fra api");
 							}
 						}
 					} catch (apiError) {

@@ -82,28 +82,28 @@ img {
 }
 .profile-scrollbar {
   max-height: 30vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-color: #ff416c #1a1a2e;
   scrollbar-base-color: transparent;
   scrollbar-width: thin;
 }
 .search-scrollContainer {
   max-height: 63vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-color: #ff416c #1a1a2e;
   scrollbar-base-color: transparent;
   scrollbar-width: thin;
 }
 .home-scrollContainer {
   max-height: 85vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-color: #ff416c #1a1a2e;
   scrollbar-base-color: transparent;
   scrollbar-width: thin;
 }
 .details-scrollContainer {
   max-height: 75vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-color: #ff416c #1a1a2e;
   scrollbar-base-color: transparent;
   scrollbar-width: thin;
